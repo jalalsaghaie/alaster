@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Application.Activities;
+using StackExchange.Redis;
 
 namespace API.Extensions
 {
@@ -26,6 +27,9 @@ namespace API.Extensions
             {
                 opt.UseSqlServer(config.GetConnectionString("SqlServer"));
             });
+
+            var radis = ConnectionMultiplexer.Connect(config.GetConnectionString("RadisServer"));
+            services.AddScoped(s => radis.GetDatabase());
 
             services.AddCors(opt =>
             {
